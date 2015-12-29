@@ -1,37 +1,32 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, '国科大跳蚤市场') %>
 
-<h1>Listing Posts</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Title</th>
-      <th>Content</th>
-      <th>Time</th>
-      <th>Status</th>
-      <th>Tag</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @posts.each do |post| %>
-      <tr>
-        <td><%= post.user_id %></td>
-        <td><%= post.title %></td>
-        <td><%= post.content %></td>
-        <td><%= post.time %></td>
-        <td><%= post.status_id %></td>
-        <td><%= post.tag_id %></td>
-        <td><%= link_to 'Show', post %></td>
-        <td><%= link_to 'Edit', edit_post_path(post) %></td>
-        <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Post', new_post_path %>
+<div style="float:left">
+  <div id='leftbox' style="float:left">
+    <ul>
+      <% @tags.each do |tag| %>
+        <li>
+          <%= link_to tag.tag_name, '#' %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div id='search_post' style="float:left">
+    <div>
+      <form>
+        <input id='search_input' placeholder='搜索'>
+        <button>搜索</button>
+      </form>
+    </div>
+    <div id='postlist'>
+      <%= will_paginate %>
+      <ul class='posts'>
+      <% @posts.each do |post| %>
+        <li>
+          <%= link_to post.title, post_path(post.id) %>
+        </li>
+      <% end %>
+      </ul>
+      <%= will_paginate %>
+    </div>
+  </div>
+</div>

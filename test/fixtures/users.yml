@@ -13,3 +13,9 @@ two:
   password: MyString
   phoneNum: MyString
   address: MyString
+
+#测试用户登录
+michael:
+  nickname: Michael Example
+  email: michael@example.com
+  password_digest: <%= User.digest('password') %>

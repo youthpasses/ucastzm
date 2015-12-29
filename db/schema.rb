@@ -11,7 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151220164405) do
+ActiveRecord::Schema.define(version: 20151223110538) do
+
+  create_table "comments", force: :cascade do |t|
+    t.string   "post_id"
+    t.integer  "form_user_id"
+    t.integer  "to_user_id"
+    t.text     "content"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "post_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "posts", force: :cascade do |t|
     t.integer  "user_id"
@@ -24,14 +40,29 @@ ActiveRecord::Schema.define(version: 20151220164405) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string   "email"
-    t.string   "nickname"
-    t.string   "password"
-    t.string   "phoneNum"
-    t.string   "address"
+  create_table "statuses", force: :cascade do |t|
+    t.string   "status_name"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "tag_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "email"
+    t.string   "nickname"
+    t.string   "phoneNum"
+    t.string   "address"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "password_digest"
+    t.string   "remember_digest"
+  end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
 
 end

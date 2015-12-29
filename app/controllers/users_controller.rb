@@ -1,5 +1,6 @@
+#encoding:utf-8
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  wrap_parameters :user, include: [:email, :nickname, :password, :password_confirmation]
 
   def login
     
@@ -14,6 +15,8 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @user = User.find(params[:id])
+    #debugger
   end
 
   # GET /users/new
@@ -23,6 +26,8 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    @user = User.find(params[:id])
+    #@user = current_user
   end
 
   # POST /users
@@ -32,11 +37,16 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
+        format.html do
+          log_in @user
+          flash[:success] = "欢迎来到国科大跳蚤市场！"
+          redirect_to @user
+        end
+        format.json { render json: @user.to_json }
       else
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.html { render 'new' }
+        format.json { render json: @user.errors }
+
       end
     end
   end
@@ -44,15 +54,13 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
-      else
-        format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
+      @user = User.find params[:id]
+
+      @user.update_attribute(:nickname, user_params_edit[:nickname])
+      @user.update_attribute(:phoneNum, user_params_edit[:phoneNum])
+      @user.update_attribute(:address, user_params_edit[:address])
+
+      redirect_to @user, notice: '保存成功！'
   end
 
   # DELETE /users/1
@@ -73,6 +81,9 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:email, :nickname, :password, :phoneNum, :address)
+      params.require(:user).permit(:email, :nickname, :password, :password_confirmation)
+    end
+    def user_params_edit
+      params.require(:user).permit(:nickname, :phoneNum, :address)
     end
 end
