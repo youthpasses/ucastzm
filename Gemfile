@@ -2,6 +2,9 @@ source 'https://ruby.taobao.org'
 
 
 gem 'rails', '4.2.4'
+gem 'carrierwave',             '0.10.0' #上传图片
+gem 'mini_magick',             '3.8.0' #上传图片
+gem 'fog',                     '1.36.0' #上传图片
 
 gem 'bcrypt', '3.1.7'
 gem 'bootstrap-will_paginate', '0.0.10'

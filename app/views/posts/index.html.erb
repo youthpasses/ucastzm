@@ -1,28 +1,37 @@
-<% provide(:title, '国科大跳蚤市场') %>
+<% provide(:title, '主页') %>
 
 <div style="float:left">
   <div id='leftbox' style="float:left">
     <ul>
+      <li>
+          <%= link_to '全部', index_path %>
+        </li>
       <% @tags.each do |tag| %>
         <li>
-          <%= link_to tag.tag_name, '#' %>
+          <%= link_to tag.tag_name, index_path(:tag_id => tag.id) %>
         </li>
       <% end %>
     </ul>
   </div>
   <div id='search_post' style="float:left">
-    <div>
-      <form>
-        <input id='search_input' placeholder='搜索'>
-        <button>搜索</button>
+    <div style="float:left">
+      <form action='index'>
+        <input id='search_input' name = 'keyword' placeholder='搜索'>
+        <button type='submit'>搜索</button>
+        <%= link_to "发帖", newpost_path, class: "btn btn-xs btn-default" %>
       </form>
+      
     </div>
     <div id='postlist'>
       <%= will_paginate %>
       <ul class='posts'>
       <% @posts.each do |post| %>
-        <li>
-          <%= link_to post.title, post_path(post.id) %>
+        <li id='post-<%= post.id %>'>
+          <span class='user'><%= post.user_id %></span>
+          <span class='title'><%= link_to post.title, post_path(post.id) %></span>
+          <span class="timestamp">
+            Posted <%= time_ago_in_words(post.created_at) %> ago.
+          </span>
         </li>
       <% end %>
       </ul>

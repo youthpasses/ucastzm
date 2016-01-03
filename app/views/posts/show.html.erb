@@ -1,34 +1,29 @@
+<% provide(:title, @post.title) %>
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>User:</strong>
-  <%= @post.user_id %>
-</p>
-
-<p>
-  <strong>Title:</strong>
-  <%= @post.title %>
-</p>
-
-<p>
-  <strong>Content:</strong>
-  <%= @post.content %>
-</p>
-
-<p>
-  <strong>Time:</strong>
-  <%= @post.time %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @post.status_id %>
-</p>
-
-<p>
-  <strong>Tag:</strong>
-  <%= @post.tag_id %>
-</p>
-
-<%= link_to 'Edit', edit_post_path(@post) %> |
-<%= link_to 'Back', posts_path %>
+<div class='contrainer'>
+  <div>
+    <h1><%= @post.title %></h1>
+    <p class='text-center' text-color='gray-light'>
+      <%= @post.user_id %> | <%= @post.created_at %>
+    </p>
+  </div>
+  <div id='postcontent'>
+    <p class='lead'>
+      <%= @post.content %>
+    </p>
+    <%= image_tag @post.picture.url if @post.picture? %>
+  </div>
+  <div id='postcomment'>
+    <strong>评论（<%= @comments.count %>）</strong>
+    <ul class='comments'>
+      <% @comments.each do |comment| %>
+        <li id='comment-<%= comment.id %>'>
+          <span class='from'><%= comment.form_user_id %></span>
+          <span class='to'><%= 回复 post.title if comment.to_user_id%></span>
+          <span class="content"><%= comment.content %></span>
+        </li>
+      <% end %>
+      </ul>
+  </div>
+</div>
