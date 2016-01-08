@@ -6,24 +6,55 @@
     <h1><%= @post.title %></h1>
     <p class='text-center' text-color='gray-light'>
       <%= @post.user_id %> | <%= @post.created_at %>
+      <% if logged_in? %>
+        <% if @likes.count != 0 %>
+          | <%= link_to '取消收藏', post_path(:post_id => @post.id, :havelike => '1', :like => '0') %><br>
+        <% else %>
+          | <%= link_to '收藏', post_path(:post_id => @post.id, :havelike => '1', :like => '1') %><br>
+        <% end %>
+      <% else %>
+      <% end %>
     </p>
   </div>
-  <div id='postcontent'>
+  <div class='postcontent'>
     <p class='lead'>
       <%= @post.content %>
     </p>
     <%= image_tag @post.picture.url if @post.picture? %>
   </div>
-  <div id='postcomment'>
-    <strong>评论（<%= @comments.count %>）</strong>
+  <div class='postcomment'>
+    <hr>
+    <strong>评论（<%= @comments.count %>）</strong><br>
+    <br><br>
     <ul class='comments'>
       <% @comments.each do |comment| %>
         <li id='comment-<%= comment.id %>'>
           <span class='from'><%= comment.form_user_id %></span>
-          <span class='to'><%= 回复 post.title if comment.to_user_id%></span>
+          <span class='to'><%= '回复' + @post.title if comment.to_user_id? %></span>
           <span class="content"><%= comment.content %></span>
+          <% if logged_in? %>
+            <% if comment.form_user_id == current_user.id %>
+              <%= link_to '[删除]'%><br>
+            <% else %>
+              <%= link_to '[回复]' if logged_in? %><br>
+            <% end %>
+            <hr>
+            <div class='form-horizontal'>
+              <>
+            </div>
+
+          <% else %>
+          <% end %>          
         </li>
       <% end %>
       </ul>
+  </div>
+  <div class = 'postcontent'>
+    <form action='post'>
+        <textarea id='search_input' name = 'comment' placeholder='输入你的评论' rows="20" cols="100"></textarea><br>
+        
+        <input id='search_input' name = 'id' value = <%= @post.id %> hidden = True>
+        <button type='submit'>提交评论</button>
+      </form>
   </div>
 </div>

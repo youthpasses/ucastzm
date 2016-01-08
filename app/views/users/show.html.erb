@@ -1,11 +1,41 @@
 <% provide(:title, @user.nickname) %>
-<div class="row">
-  <aside class="col-md-4">
-    <section class="user_info">
+<div class='container'>
+<div class="postcontent">
       <h1>
-        <%= gravatar_for @user %>
-        <%= @user.nickname %>
+        <%= @user.email %>
       </h1>
-    </section>
-  </aside>
+    <br>
+    <strong>基本资料</strong><br><br>
+      昵称：<%= @user.nickname %><br>
+      电话：<%= @user.phoneNum %><br>
+      地址：<%= @user.address %><br>
+      <% if @user.id == current_user.id %>
+        <%= link_to "[编辑资料]", edit_user_path(current_user) %>
+      <% else %>
+      <% end %>
+    <hr style="border:1px dashed #0000fff"/>
+</div>
+<div class='postcomment'>
+  	<strong>我的帖子(<%= @posts.count %>)</strong><br><br>
+  	<% @posts.each do |post| %>
+        <li id='post-<%= post.id %>'>
+          <span class='title'><%= link_to post.title, post_path(post.id) %></span>
+          <% if @user.id == current_user.id %>&nbsp&nbsp
+          <%= link_to '[删除]', delpost_path(:post_id => post), method: :delete, data: {confirm: "确定删除？"} %><br>
+          <% end %>
+        </li>
+    <% end %>
+    <hr style="border:1px dashed #0000fff"/>
+</div>
+<div class='postcomment'>
+    <strong>我的收藏(<%= @likes.count %>)</strong><br><br>
+    <% @likes.each do |like| %>
+        <li id='like-<%= like.id %>'>
+          <span class='title'><%= link_to like.post_id, post_path(like.post_id) %></span>
+          <% if @user.id == current_user.id %>&nbsp&nbsp
+          <%= link_to '[取消收藏]'%><br>
+          <% end %>
+        </li>
+    <% end %>
+</div>
 </div>

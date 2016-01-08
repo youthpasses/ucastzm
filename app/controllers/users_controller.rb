@@ -16,6 +16,8 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
+    @posts = Post.find_by_sql('select * from Posts where user_id = ' + @user.id.to_s)
+    @likes = Like.find_by_sql("select * from Likes where user_id = " + @user.id.to_s)
     #debugger
   end
 

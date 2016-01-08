@@ -1,3 +1,6 @@
+# coding:utf-8
+require 'will_paginate/array'
+
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
@@ -17,7 +20,8 @@ class PostsController < ApplicationController
     if params[:keyword]
       #@posts = Post.find(:all, :conditions => ['title like ?', '%#{params[:keyword]}%'])
       #@posts = Post.where(:all, :conditions => { :tag_id => 1..10 }).paginate(page: params[:page])
-      @posts = Post.where('title LIKE ?', '%#{params[:keyword]}%').paginate(page: params[:page])
+      #@posts = Post.where('title LIKE ?', '%#{params[:keyword]}%').paginate(page: params[:page])
+      @posts = Post.find_by_sql("select * from Posts where title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%'").paginate(page: params[:page])
     end
 
   end
@@ -26,6 +30,20 @@ class PostsController < ApplicationController
   # GET /posts/1.json
   def show
     @comments = Comment.where(post_id: params[:id])
+    if logged_in?
+      #@like = Like.where(post_id: params[:id], user_id: current_user.id)
+      
+      if params[:havelike] == '1'
+        if params[:like] == '1'
+          @like = Like.new(:post_id => params[:id], :user_id => current_user.id)
+          @like.save
+        else
+          Like.find_by_sql("delete from Likes where post_id = " + params[:id] + " and user_id = " + current_user.id.to_s )
+        end
+      end
+      @likes = Like.find_by_sql("select * from Likes where post_id = " + params[:id] + " and user_id = " + current_user.id.to_s )
+    end
+    
   end
 
   # GET /posts/new
@@ -72,10 +90,14 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1
   # DELETE /posts/1.json
-  def destroy
-    @post.destroy
+  def delpost
+    @posts = Post.find_by_sql('select * from Post where id = ' + post_id.to_s)
+    posts.each do |post|
+      post.destroy
+    end
+    #Post.find_by_sql('delete from Post where id = ' + @post.id.to_s)
     respond_to do |format|
-      format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
+      format.html { redirect_to current_user, notice: '删除成功！' }
       format.json { head :no_content }
     end
   end
