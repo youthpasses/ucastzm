@@ -19,20 +19,31 @@
       <form action='index'>
         <input id='search_input' name = 'keyword' placeholder='搜索'>
         <button type='submit'>搜索</button>
-        <%= link_to "发帖", newpost_path, class: "btn btn-xs btn-default" %>
+        <% if logged_in? %>
+          <%= link_to "发帖", newpost_path, class: "btn btn-xs btn-default" %>
+        <% end %>
       </form>
       
     </div>
     <div id='postlist'>
       <%= will_paginate %>
-      <ul class='posts'>
+      <br>
+      <ul class='' style='list-style-type: none'>
       <% @posts.each do |post| %>
         <li id='post-<%= post.id %>'>
-          <span class='user'><%= post.user_id %></span>
-          <span class='title'><%= link_to post.title, post_path(post.id) %></span>
-          <span class="timestamp">
-            Posted <%= time_ago_in_words(post.created_at) %> ago.
-          </span>
+          <% @user = getUserWithID(post.user_id) %>
+          <div >
+            <div style="float:left">
+              <span class='user'><%= link_to @user.nickname, @user %></span><br>
+              <h4><%= link_to post.title, post_path(post.id) %></h4>
+            </div>
+            <div>
+              <br><br>
+              <p align='right'><%= post.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
+            </div>
+          </div>
+          
+          <hr>
         </li>
       <% end %>
       </ul>

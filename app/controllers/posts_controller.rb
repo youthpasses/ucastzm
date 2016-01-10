@@ -7,6 +7,11 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
+
+    if params[:del_post_id]
+      Post.find_by_sql("delete from Posts where id = " + params[:del_post_id].to_s)
+    end
+
     @tags = Tag.all
 
     @all_tag_ids = Post.tag_idcollection
@@ -62,16 +67,7 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
     @post.user_id = current_user.id
     @post.status_id = 1
-
-    respond_to do |format|
-      if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
-      else
-        format.html { render :new }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
-    end
+    redirect_to @post
   end
 
   # PATCH/PUT /posts/1
@@ -88,17 +84,17 @@ class PostsController < ApplicationController
     end
   end
 
+  def addcomment
+    
+    
+  end
+
   # DELETE /posts/1
   # DELETE /posts/1.json
   def delpost
-    @posts = Post.find_by_sql('select * from Post where id = ' + post_id.to_s)
-    posts.each do |post|
-      post.destroy
-    end
-    #Post.find_by_sql('delete from Post where id = ' + @post.id.to_s)
-    respond_to do |format|
-      format.html { redirect_to current_user, notice: '删除成功！' }
-      format.json { head :no_content }
+    if params[:post_id]
+      Post.find_by_sql('delete from Posts where id = ' + params[:post_id].to_s)
+      redirect_to current_user
     end
   end
 
