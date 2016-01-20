@@ -39,7 +39,7 @@
             </div>
             <div>
               <br><br>
-              <p align='right'><%= post.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
+              <p align='right' class='timestamp'><%= time_ago_in_words(post.created_at) %> 前发布</p>
             </div>
           </div>
           

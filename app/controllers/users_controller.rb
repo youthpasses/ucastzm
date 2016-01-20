@@ -16,7 +16,9 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    @posts = Post.find_by_sql('select * from Posts where user_id = ' + @user.id.to_s)
+    @posts = Post.find_by_sql('select * from Posts where user_id = ' + @user.id.to_s + ' order by status_id')
+    @posts_1_2 = Post.find_by_sql('select * from Posts where user_id = ' + @user.id.to_s + ' and ( status_id = 1 or status_id = 2)')
+    @posts_3 = Post.find_by_sql('select * from Posts where user_id = ' + @user.id.to_s + ' and ( status_id = 1 or status_id = 2)')
     @likes = Like.find_by_sql("select * from Likes where user_id = " + @user.id.to_s)
     #debugger
   end
@@ -76,6 +78,7 @@ class UsersController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])

@@ -3,14 +3,21 @@
   <div class="form-horizontal">
     <%= form_for(@post, html: { multipart: true}) do |f| %>
 	  
-	  <div class="form-group">
+      <div class="form-group">
         <%= f.label :标题, class: 'col-sm-2 control-label' %> 
         <div class = 'col-xs-5'>
           <%= f.text_field :title, class: 'form-control' %>
-	    </div>
-	  </div>
+	     </div>
+      </div>
 
-	  <div class="form-group">
+      <div class="form-group">
+        <%= f.label :标签, class: 'col-sm-2 control-label' %><br>
+        <div class="btn-group" data-toggle="buttons">
+          <%= f.select :status_id, @statuses.collect{|c|[c.status_name, c.id]}%>
+        </div>
+      </div>
+
+      <div class="form-group">
         <%= f.label :类别, class: 'col-sm-2 control-label' %><br>
         <div class="btn-group" data-toggle="buttons">
           <%= f.select :tag_id, @tags.collect{|c|[c.tag_name, c.id]}%>
@@ -31,10 +38,9 @@
         </span>
       </div>
 
-
       <div class='form-group'>
         <div class='col-sm-offset-2 col-sm-5'>
-      	  <%= f.submit "提交", class: "btn btn-primary" %>
+      	  <%= f.submit "提交", class: "btn btn-primary btn-lg btn-block" %>
         </div>
   	  </div>
     <% end %>

@@ -20,7 +20,7 @@ class PostsController < ApplicationController
     else
       @tag = @all_tag_ids
     end
-    @posts = Post.where(tag_id: @tag).paginate(page: params[:page])
+    @posts = Post.where(tag_id: @tag, status_id:[1, 2]).paginate(page: params[:page])
 
     if params[:keyword]
       #@posts = Post.find(:all, :conditions => ['title like ?', '%#{params[:keyword]}%'])
@@ -55,6 +55,7 @@ class PostsController < ApplicationController
   def new
     @post = Post.new
     @tags = Tag.all
+    @statuses = Status.all[0, 2]
   end
 
   # GET /posts/1/edit
@@ -66,8 +67,17 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     @post.user_id = current_user.id
-    @post.status_id = 1
+    @post.save
     redirect_to @post
+#    respond_to do |format|    
+#      if @post.save   
+#        format.html { redirect_to @post, notice: 'Post was successfully created.' }   
+#        format.json { render :show, status: :created, location: @post }   
+#      else    
+#        format.html { render :new }   
+#        format.json { render json: @post.errors, status: :unprocessable_entity }    
+#      end   
+#    end
   end
 
   # PATCH/PUT /posts/1
@@ -87,6 +97,24 @@ class PostsController < ApplicationController
   def addcomment
     
     
+  end
+
+  def jietie
+    if post_id = params[:post_id]
+      Post.find_by_sql('update Posts set status_id = 4 where id = ' + post_id.to_s)
+      @post = Post.where(id: post_id)
+      redirect_to @post[0]
+    end
+  end
+
+  def juanzeng
+    if post_id = params[:post_id]
+      Post.find_by_sql('update Posts set status_id = 3 where id = ' + post_id.to_s)
+      @post = Post.where(id: post_id)
+      if @post
+        redirect_to @post[0]
+      end
+    end
   end
 
   # DELETE /posts/1

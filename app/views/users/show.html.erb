@@ -21,6 +21,8 @@
   	<strong>我的帖子(<%= @posts.count %>)</strong><br><br>
   	<% @posts.each do |post| %>
         <li id='post-<%= post.id %>'>
+          <% @status = getStatusWithID(post.status_id) %>
+          【<%= @status.status_name %>】
           <span class='title'><%= link_to post.title, post_path(post.id) %></span>
           <% if logged_in? %>
             <% if @user.id == current_user.id %>&nbsp&nbsp

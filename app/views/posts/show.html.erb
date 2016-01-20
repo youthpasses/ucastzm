@@ -6,7 +6,7 @@
     <h1><%= @post.title %></h1>
     <p class='text-center' text-color='gray-light'>
       <% @user = getUserWithID(@post.user_id) %>
-      <%= link_to @user.nickname, @user %> | <%= @post.created_at %>
+      <%= link_to @user.nickname, @user %> | <%= @post.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
       <% if logged_in? %>
         <% if @likes.count != 0 %>
           | <%= link_to '取消收藏', post_path(:post_id => @post.id, :havelike => '1', :like => '0') %>
@@ -27,6 +27,30 @@
   </div>
 
   <div class='postcomment'>
+    
+    <% if logged_in? %>
+      <% if @post.user_id == current_user.id %>
+        <% if @post.status_id == 1%>
+          <div align='right'>
+            <%= link_to '结贴', jietie_path(:post_id => @post.id), :class => 'btn btn-primary', data: {confirm: "确定结贴？"}  %>
+            <%= link_to '捐赠', juanzeng_path(:post_id => @post.id), :class => 'btn btn-success', data: {confirm: "确定捐赠？"}  %>
+          </div>
+        <% elsif @post.status_id == 2%>
+          <div align='right'>
+            <%= link_to '结贴', jietie_path(:post_id => @post.id), :class => 'btn btn-primary', data: {confirm: "确定结贴？"}  %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% if @post.status_id == 3 %>
+      <div align='right'>
+        <button class='btn btn-information' disabled="disabled">已捐赠</button>
+      </div>
+    <% elsif @post.status_id == 4 %>
+      <div align='right'>
+        <button class='btn btn-information' disabled="disabled">已结贴</button>
+      </div>
+    <% end %>
     <hr>
     <strong>评论（<%= @comments.count %>）</strong><br>
     <br><br>
@@ -54,24 +78,22 @@
       </ul>
   </div>
   <% if logged_in? %>
-    <% if @post.user_id == current_user.id %>
-      
-    <% end %>
-
-    <div class = 'postcontent'>
-      <form action='addComment'>
+    <% if @post.status_id == 1 or @post.status_id == 2%>
+      <div class = 'postcontent'>
+        <form action='addComment'>
           <textarea id='search_input' name = 'comment' placeholder='输入你的评论'><%= @post.id %></textarea><br>
         
           <input id='search_input' name = 'post_id' value = <%= @post.id %> >
           <button type='submit'>提交评论</button>
         </form>
-    </div>
-    <div class = 'postcontent'>
-      <%= form_tag('posts/addcomment') do %>
-        <%= text_area_tag(:content) %>
-        <%= text_field_tag(:post_id) %>
-        <%= submit_tag('submit')%>
-      <% end %>
-    </div>
+      </div>
+      <div class = 'postcontent'>
+        <%= form_tag('posts/addcomment') do %>
+          <%= text_area_tag(:content) %>
+          <%= text_field_tag(:post_id) %>
+          <%= submit_tag('submit')%>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 </div>
