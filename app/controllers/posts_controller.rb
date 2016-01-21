@@ -20,14 +20,19 @@ class PostsController < ApplicationController
     else
       @tag = @all_tag_ids
     end
-    @posts = Post.where(tag_id: @tag, status_id:[1, 2]).paginate(page: params[:page])
+    @posts = Post.all.paginate(page: params[:page])
+    @posts_chushou = Post.where(tag_id: @tag, status_id: 1).paginate(page: params[:page])
+    @posts_qiugou = Post.where(tag_id: @tag, status_id: 2).paginate(page: params[:page])
 
     if params[:keyword]
       #@posts = Post.find(:all, :conditions => ['title like ?', '%#{params[:keyword]}%'])
       #@posts = Post.where(:all, :conditions => { :tag_id => 1..10 }).paginate(page: params[:page])
       #@posts = Post.where('title LIKE ?', '%#{params[:keyword]}%').paginate(page: params[:page])
-      @posts = Post.find_by_sql("select * from Posts where title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%'").paginate(page: params[:page])
+      @posts_chushou = Post.find_by_sql("select * from Posts where status_id = '1' and title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%'").paginate(page: params[:page])
+      @posts_qiugou = Post.find_by_sql("select * from Posts where status_id = '2' and title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%'").paginate(page: params[:page])
     end
+
+    @juanzeng_posts = Post.find_by_sql('select distinct user_id from Posts where status_id = "3"')
 
   end
 
@@ -95,8 +100,9 @@ class PostsController < ApplicationController
   end
 
   def addcomment
-    
-    
+    post_id = params[:post_id]
+    @post = Post.where(id: post_id)
+    redirect_to @posts[0]
   end
 
   def jietie

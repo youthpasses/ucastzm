@@ -1,10 +1,9 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
   <div class="container">
-    <%= link_to "国科大跳蚤市场", root_path, id: "logo" %>
+    <%= link_to "国科大跳蚤市场", index_path, id: "logo" %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "主页",   index_path %></li>
-        <li><%= link_to "帮助",   help_path %></li>
         <% if logged_in? %>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -19,7 +18,9 @@
               </li>
             </ul>
           </li>
+          <li><%= link_to "发帖", newpost_path %></li>
         <% else %>
+          <li><%= link_to "注册", signup_path %></li>
           <li><%= link_to "登录", login_path %></li>
         <% end %>
       </ul>

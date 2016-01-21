@@ -15,3 +15,17 @@
 //= require bootstrap
 //= require turbolinks
 //= require_tree .
+
+  function showChushoutie() {
+    target1 = document.getElementById('postlist_chushou');
+    target1.style.display = "";
+    target2 = document.getElementById('postlist_qiugou');
+    target2.style.display = "none";
+  }
+
+    function showQiugoutie() {
+    target1 = document.getElementById('postlist_chushou');
+    target1.style.display = "";
+    target2 = document.getElementById('postlist_qiugou');
+    target2.style.display = "none";
+  }

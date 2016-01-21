@@ -52,6 +52,15 @@
       </div>
     <% end %>
     <hr>
+    <% if logged_in? %>
+      <div>
+        <p>联系方式：</p>
+        <p><strong><font size='4'><%= @user.phoneNum%></font></strong></p>
+        <p><strong><font size='4'><%= @user.address%></font></strong></p>
+      </div>
+      <hr>
+    <% end %>
+
     <strong>评论（<%= @comments.count %>）</strong><br>
     <br><br>
     <ul class='comments'>
@@ -72,7 +81,7 @@
             </div>
 
           <% else %>
-          <% end %>          
+          <% end %>
         </li>
       <% end %>
       </ul>
@@ -80,13 +89,16 @@
   <% if logged_in? %>
     <% if @post.status_id == 1 or @post.status_id == 2%>
       <div class = 'postcontent'>
-        <form action='addComment'>
+        <form action='addcomment'>
           <textarea id='search_input' name = 'comment' placeholder='输入你的评论'><%= @post.id %></textarea><br>
-        
           <input id='search_input' name = 'post_id' value = <%= @post.id %> >
           <button type='submit'>提交评论</button>
         </form>
       </div>
+      <form action='index'>
+        <input id='search_input' name = 'keyword' placeholder='搜索'>
+        <button type='submit'>搜索</button>
+      </form>
       <div class = 'postcontent'>
         <%= form_tag('posts/addcomment') do %>
           <%= text_area_tag(:content) %>

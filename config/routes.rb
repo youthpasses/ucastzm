@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :posts
   resources :users
 
-  root 'static_pages#home'
+  root 'posts#index'
   get 'help' => 'static_pages#help'
   get 'about' => 'static_pages#about'
   get 'contact' => 'static_pages#contact'

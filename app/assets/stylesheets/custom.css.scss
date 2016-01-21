@@ -215,23 +215,16 @@ input {
 
 
 #leftbox {
-  color: dimgray;
-  background-color: whitesmoke;
   margin-top: 10px;
   width: 120px;
   height: 400px;
   font-size: 12pt;
-  border-radius: 4px;
-  padding-top: 25px;
   padding-bottom: 20px;
-  border-width: 2px;
-  border-style: groove;
-  border-color: gainsboro;
 }
 
 #search_post {
   margin-top: 10px;
-  margin-left: 20px;
+  margin-left: 0px;
 }
 
 #search_input {
@@ -242,9 +235,38 @@ input {
   border-radius: 3px;
 }
 
-#postlist {
+#myTab {
+  margin-left: 40px;
+}
+
+.postlist {
   margin-top: 30px;
   color: dimgray;
+  font-size: 12pt;
+}
+
+.btn_class {
+  background-color: #ffffff;
+  margin-left: 20px;
+  width: 300px;
+  height: 50px;  
+}
+
+.newpost {
+  margin-top: 20px;
+  background-color: #f6671a;
+  display:block;
+  width:60px;
+  height:30px;;
+  border-radius: 2px;
+  text-align: center;
+  color: white;
+}
+
+
+#juanzeng {
+  margin-left: 50px;
+  margin-top: 20px;
   font-size: 12pt;
 }
 
