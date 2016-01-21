@@ -28,8 +28,8 @@ class PostsController < ApplicationController
       #@posts = Post.find(:all, :conditions => ['title like ?', '%#{params[:keyword]}%'])
       #@posts = Post.where(:all, :conditions => { :tag_id => 1..10 }).paginate(page: params[:page])
       #@posts = Post.where('title LIKE ?', '%#{params[:keyword]}%').paginate(page: params[:page])
-      @posts_chushou = Post.find_by_sql("select * from Posts where status_id = '1' and title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%'").paginate(page: params[:page])
-      @posts_qiugou = Post.find_by_sql("select * from Posts where status_id = '2' and title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%'").paginate(page: params[:page])
+      @posts_chushou = Post.find_by_sql("select * from Posts where status_id = '1' and ( title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%' )").paginate(page: params[:page])
+      @posts_qiugou = Post.find_by_sql("select * from Posts where status_id = '2' and ( title LIKE '%" + params[:keyword] + "%' or content LIKE '%" + params[:keyword] + "%' )").paginate(page: params[:page])
     end
 
     @juanzeng_posts = Post.find_by_sql('select distinct user_id from Posts where status_id = "3"')
@@ -65,6 +65,8 @@ class PostsController < ApplicationController
 
   # GET /posts/1/edit
   def edit
+    @tags = Tag.all
+    @statuses = Status.all[0, 2]
   end
 
   # POST /posts
@@ -118,6 +120,7 @@ class PostsController < ApplicationController
       Post.find_by_sql('update Posts set status_id = 3 where id = ' + post_id.to_s)
       @post = Post.where(id: post_id)
       if @post
+        flash[:success] = "捐赠成功！感谢您的慷慨捐赠，国科大跳蚤市场工作人员会尽快与您取得联系！再次表示感谢！"
         redirect_to @post[0]
       end
     end

@@ -1,6 +1,45 @@
-<h1>Editing Post</h1>
+<h1>编辑帖子</h1>
+<div class="form-horizontal">
+  <%= form_for(@post, html: { multipart: true}) do |f| %>
+  	<div class="form-group">
+      <%= f.label :标题, class: 'col-sm-2 control-label' %> 
+      <div class = 'col-xs-5'>
+      <%= f.text_field :title, class: 'form-control' %>
+	  </div>
+    </div>
 
-<%= render 'form' %>
+    <div class="form-group">
+      <%= f.label :标签, class: 'col-sm-2 control-label' %><br>
+      <div class="btn-group" data-toggle="buttons">
+        <%= f.select :status_id, @statuses.collect{|c|[c.status_name, c.id]}%>
+      </div>
+    </div>
 
-<%= link_to 'Show', @post %> |
-<%= link_to 'Back', posts_path %>
+    <div class="form-group">
+      <%= f.label :类别, class: 'col-sm-2 control-label' %><br>
+      <div class="btn-group" data-toggle="buttons">
+        <%= f.select :tag_id, @tags.collect{|c|[c.tag_name, c.id]}%>
+      </div>
+    </div>
+
+    <div class='form-group'>
+      <%= f.label :内容, class: 'col-sm-2 control-label' %>
+      <div class = 'col-xs-7'>
+      <%= f.text_area :content, class: 'form-control', rows: '10' %>
+      </div>
+    </div>
+
+    <div class='form-group'>
+      <%= f.label :附件, class: 'col-sm-2 control-label' %>
+      <span class='picture col-xs-7'>
+      <%= f.file_field :picture %>
+      </span>
+    </div>
+
+    <div class='form-group'>
+      <div class='col-sm-offset-2 col-sm-5'>
+      <%= f.submit "提交", class: "btn btn-primary btn-lg btn-block" %>
+      </div>
+  	</div>
+    <% end %>
+  </div>

@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
 
+  get 'comments/new'
+
   resources :posts
   resources :users
+  resources :comments
 
   root 'posts#index'
   get 'help' => 'static_pages#help'
@@ -20,10 +23,9 @@ Rails.application.routes.draw do
   get 'index' => 'posts'
   get 'delpost' => 'posts#delpost'
   get 'newpost' => 'posts#new'
-  post 'addComment' => 'posts#addcomment'
   get 'jietie' => 'posts#jietie'
   get 'juanzeng' => 'posts#juanzeng'
-
+  get 'delComment' => 'comments#delComment'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

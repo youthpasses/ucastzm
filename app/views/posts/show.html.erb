@@ -14,6 +14,7 @@
           | <%= link_to '收藏', post_path(:post_id => @post.id, :havelike => '1', :like => '1') %>
         <% end %>
         <% if @post.user_id == current_user.id %>
+          | <%= link_to "编辑", edit_post_path(@post) %>
           | <%= link_to '删除', index_path(:del_post_id => @post.id), data: {confirm: "确定删除？"}  %>
         <% end %>
       <% end %>
@@ -26,8 +27,7 @@
     <%= image_tag @post.picture.url if @post.picture? %>
   </div>
 
-  <div class='postcomment'>
-    
+  <div class='postcomment'>    
     <% if logged_in? %>
       <% if @post.user_id == current_user.id %>
         <% if @post.status_id == 1%>
@@ -62,50 +62,62 @@
     <% end %>
 
     <strong>评论（<%= @comments.count %>）</strong><br>
-    <br><br>
-    <ul class='comments'>
+    <br>
+    <ul class='comments' style='list-style-type: none'>
+      <% i = 0%>
       <% @comments.each do |comment| %>
         <li id='comment-<%= comment.id %>'>
-          <span class='from'><%= comment.form_user_id %></span>
-          <span class='to'><%= '回复' + @post.title if comment.to_user_id? %></span>
-          <span class="content"><%= comment.content %></span>
+          <% @user_from = getUserWithID(comment.form_user_id) %>
+          <% i = i + 1 %>
+          <p><font size = '2'><%= i %>#&nbsp&nbsp@<%= link_to @user_from.nickname, @user_from %></font>
+            <% if comment.to_user_id != nil %>
+            <% @user_to = getUserWithID(comment.to_user_id)%>
+            回复@<%= link_to @user_to.nickname, @user_to %>
+          <% end %>
+            &nbsp&nbsp&nbsp&nbsp<font size='1'><%= comment.created_at.strftime("%Y-%m-%d %H:%M:%S") %></font></p>
+          
+          <span class="content"><font size='3'><%= comment.content %></font></span>
           <% if logged_in? %>
             <% if comment.form_user_id == current_user.id %>
-              <%= link_to '[删除]'%><br>
+              <%= link_to '[删除]', delComment_path(:post_id => @post.id, :comment_id => comment.id)%><br>
             <% else %>
-              <%= link_to '[回复]' if logged_in? %><br>
+              <button onclick="test(<%= comment.form_user_id %>)", style="background-color:transparent;border:0">[回复]</button>
             <% end %>
-            <hr>
-            <div class='form-horizontal'>
-              <>
-            </div>
-
           <% else %>
           <% end %>
+          <hr>
         </li>
       <% end %>
       </ul>
   </div>
+
   <% if logged_in? %>
     <% if @post.status_id == 1 or @post.status_id == 2%>
       <div class = 'postcontent'>
-        <form action='addcomment'>
-          <textarea id='search_input' name = 'comment' placeholder='输入你的评论'><%= @post.id %></textarea><br>
-          <input id='search_input' name = 'post_id' value = <%= @post.id %> >
-          <button type='submit'>提交评论</button>
-        </form>
-      </div>
-      <form action='index'>
-        <input id='search_input' name = 'keyword' placeholder='搜索'>
-        <button type='submit'>搜索</button>
-      </form>
-      <div class = 'postcontent'>
-        <%= form_tag('posts/addcomment') do %>
-          <%= text_area_tag(:content) %>
-          <%= text_field_tag(:post_id) %>
-          <%= submit_tag('submit')%>
+        <%= form_for Comment.new do |f| %>
+          <%= f.label :评论 %>
+          <%= f.text_area :content, class: 'form-control', rows: '5', id: 'comment_area' %>
+          <!-- 隐藏部分 -->
+          <%= f.text_field :post_id, value: @post.id, hidden: 'YES' %>
+          <%= f.text_field :form_user_id, value: current_user.id, hidden: 'YES' %>
+          <%= f.text_field :to_user_id, id: "to_user_id_field", hidden: 'YES' %>
+          <%= f.submit "提交", class: "btn btn-primary"%>
         <% end %>
       </div>
     <% end %>
   <% end %>
 </div>
+
+<script>
+  function test(to_user_id){
+    comment_area = document.getElementById('comment_area');
+    comment_area.select();
+    document.getElementById('to_user_id_field').value = to_user_id;
+  }
+</script>
+
+
+
+
+
+
