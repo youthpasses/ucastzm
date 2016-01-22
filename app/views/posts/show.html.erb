@@ -14,7 +14,6 @@
           | <%= link_to '收藏', post_path(:post_id => @post.id, :havelike => '1', :like => '1') %>
         <% end %>
         <% if @post.user_id == current_user.id %>
-          | <%= link_to "编辑", edit_post_path(@post) %>
           | <%= link_to '删除', index_path(:del_post_id => @post.id), data: {confirm: "确定删除？"}  %>
         <% end %>
       <% end %>
